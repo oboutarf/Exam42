@@ -6,7 +6,7 @@
 /*   By: oboutarf <oboutarf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 17:02:07 by oboutarf          #+#    #+#             */
-/*   Updated: 2023/02/13 17:23:07 by oboutarf         ###   ########.fr       */
+/*   Updated: 2023/02/13 17:48:36 by oboutarf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ t_mcroshell	*init_microshell(char **av)
 	init->chain->cmd_line->fd_out = 1;
 	init->chain->head_cmd_line = init->chain->cmd_line;
 	content = count_cmd_plus_args(av, 0);
-	init->chain->cmd_line->content = malloc(sizeof(char *) * (content + 1));
+	init->chain->cmd_line->content = calloc(sizeof(char *), (content + 1));
 	if (!init->chain->cmd_line->content)
 		return (NULL);
 	return (init);
@@ -168,7 +168,7 @@ int	parse_commands(char **av, t_mcroshell *m)
 		if (!j)
 		{
 			j = count_cmd_plus_args(av, i);
-			m->chain->cmd_line->content = malloc(sizeof(char *) * (j + 1));
+			m->chain->cmd_line->content = calloc(sizeof(char *), (j + 1));
 			if (!m->chain->cmd_line->content)
 				return (0);
 			k = 0;
@@ -186,6 +186,7 @@ int	parse_commands(char **av, t_mcroshell *m)
 		}
 		else if (av[i + 1] && !ft_strcmp(av[i], ";"))
 		{
+			m->chain->cmd_line->next = NULL;
 			m->chain->next = malloc(sizeof(t_chain));
 			if (!m->chain->next)
 				return (0);
@@ -206,6 +207,8 @@ int	parse_commands(char **av, t_mcroshell *m)
 			i++;
 		}
 	}
+	m->chain->cmd_line->next = NULL;
+	m->chain->next = NULL;
 	return (i);
 
 }
@@ -261,9 +264,39 @@ int	exec_chains(t_mcroshell *m, char **env)
 	return (1);
 }
 
+int	free_process(t_mcroshell *m)
+{
+	t_chain *tmp_chain;
+	t_cmd	*tmp_cmd;
+	int	i;
+
+	m->chain = m->head_chain;
+	while (m->chain)
+	{
+		tmp_chain = m->chain;
+		m->chain->cmd_line = m->chain->head_cmd_line;
+		while (m->chain->cmd_line)
+		{
+			i = 0;
+			tmp_cmd = m->chain->cmd_line;
+			while (m->chain->cmd_line->content[i])
+			{
+				free(m->chain->cmd_line->content[i]);
+				m->chain->cmd_line->content[i] = NULL;
+			}
+			free(m->chain->cmd_line->content);
+			m->chain->cmd_line->content = NULL;
+			m->chain->cmd_line = m->chain->cmd_line->next;
+			free(tmp_cmd);
+		}
+		m->chain = m->chain->next;
+		free(tmp_chain);
+	}
+	return (1);
+}
+
 //			######			//
 //		 --- MAIN ---		//
-
 int main(int ac, char **av, char **env)
 {
 	dprintf(2, "\n%s\n\n", " - % MicroShell42 training % - ");
@@ -271,8 +304,9 @@ int main(int ac, char **av, char **env)
 
 	micro_shell = init_microshell(av);
 	parse_commands(av, micro_shell);
-	// print_chains(micro_shell);
 	exec_chains(micro_shell, env);
+	free_process(micro_shell);
 	(void)ac;
 	return (0);
 }
+// print_chains(micro_shell);

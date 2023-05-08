@@ -6,7 +6,7 @@
 /*   By: oscobou <oscobou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 20:02:34 by oscobou           #+#    #+#             */
-/*   Updated: 2023/05/07 21:26:22 by oscobou          ###   ########.fr       */
+/*   Updated: 2023/05/08 13:55:02 by oscobou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ current instance as parameter.
 
 # include <iostream>
 # include <string>
+
+class       ATarget;
 # include "ATarget.hpp"
 
 class   ASpell  {

@@ -6,7 +6,7 @@
 /*   By: oscobou <oscobou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 15:31:01 by oboutarf          #+#    #+#             */
-/*   Updated: 2023/05/08 13:07:03 by oscobou          ###   ########.fr       */
+/*   Updated: 2023/05/08 13:57:45 by oscobou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ void    Warlock::setTitle(std::string const& title)    {
 
 void    Warlock::learnSpell(ASpell* spell)  {
     if (spell)  {
-        std::vector<ASpell*>::iterator   ite = kSpell.end();
-        for (; ite != kSpell.begin(); ite--)  {
-            if ((*ite)->getName() == spell->getName())
+        std::vector<ASpell*>::iterator   it = kSpell.begin();
+        for (; it != kSpell.end(); it++)  {
+            if ((*it)->getName() == spell->getName())
                 return ;
         }
         this->kSpell.push_back(spell->clone());
@@ -42,19 +42,19 @@ void    Warlock::learnSpell(ASpell* spell)  {
 }
 
 void    Warlock::forgetSpell(std::string nSpell)    {
-    std::vector<ASpell*>::iterator  ite = kSpell.end();
-    for (; ite != kSpell.begin(); ite--) {
-        if ((*ite)->getName() == nSpell)    {
-            delete *ite;
-            this->kSpell.erase(ite);
+    std::vector<ASpell*>::iterator  it = kSpell.begin();
+    for (; it != kSpell.end(); it++) {
+        if ((*it)->getName() == nSpell)    {
+            delete *it;
+            this->kSpell.erase(it);
         }
     }
 }
 void    Warlock::launchSpell(std::string nSpell, ATarget& tgt)  {
-    std::vector<ASpell*>::iterator  ite = kSpell.end();
-    for (; ite != kSpell.begin(); ite--)   {
-        if ((*ite)->getName() == nSpell)    {
-            (*ite)->launch(tgt);
+    std::vector<ASpell*>::iterator  it = kSpell.begin();
+    for (; it != kSpell.end(); it++)   {
+        if ((*it)->getName() == nSpell)    {
+            (*it)->launch(tgt);
             return;
         }
     }

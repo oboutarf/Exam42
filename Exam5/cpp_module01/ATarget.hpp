@@ -6,7 +6,7 @@
 /*   By: oscobou <oscobou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 20:37:37 by oscobou           #+#    #+#             */
-/*   Updated: 2023/05/07 21:31:42 by oscobou          ###   ########.fr       */
+/*   Updated: 2023/05/08 13:54:48 by oscobou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@ getEffects function. */
 
 # include <iostream>
 # include <string>
+
+class       ASpell;
 # include "ASpell.hpp"
+
 class ATarget   {
 
 public:

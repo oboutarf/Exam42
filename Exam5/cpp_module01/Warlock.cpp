@@ -6,7 +6,7 @@
 /*   By: oscobou <oscobou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 15:31:01 by oboutarf          #+#    #+#             */
-/*   Updated: 2023/05/08 13:57:45 by oscobou          ###   ########.fr       */
+/*   Updated: 2023/05/08 14:40:25 by oscobou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,11 @@ void    Warlock::forgetSpell(std::string nSpell)    {
         if ((*it)->getName() == nSpell)    {
             delete *it;
             this->kSpell.erase(it);
+            return ;
         }
     }
 }
-void    Warlock::launchSpell(std::string nSpell, ATarget& tgt)  {
+void    Warlock::launchSpell(std::string nSpell, ATarget const & tgt)  {
     std::vector<ASpell*>::iterator  it = kSpell.begin();
     for (; it != kSpell.end(); it++)   {
         if ((*it)->getName() == nSpell)    {

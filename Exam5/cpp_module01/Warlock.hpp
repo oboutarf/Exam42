@@ -6,7 +6,7 @@
 /*   By: oscobou <oscobou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 15:31:05 by oboutarf          #+#    #+#             */
-/*   Updated: 2023/05/08 12:49:21 by oscobou          ###   ########.fr       */
+/*   Updated: 2023/05/08 14:39:49 by oscobou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ public:
 		std::string const&  getTitle(void)          const;
 		void								learnSpell(ASpell* spell);
 		void								forgetSpell(std::string nSpell);
-		void								launchSpell(std::string nSpell, ATarget& tgt);
+		void								launchSpell(std::string nSpell, ATarget const& tgt);
 		void                setTitle(std::string const& title);
 		~Warlock();
 private:

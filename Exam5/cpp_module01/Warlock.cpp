@@ -1,0 +1,84 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Warlock.cpp                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oscobou <oscobou@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/07 15:31:01 by oboutarf          #+#    #+#             */
+/*   Updated: 2023/05/08 13:07:03 by oscobou          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "Warlock.hpp"
+
+Warlock::Warlock(std::string const& name, std::string const& title)   {
+    this->name = name;
+    this->title = title;
+    std::cout << this->getName() << ": This looks like another boring day." << std::endl;
+}
+
+std::string const& Warlock::getName(void)       const    {
+    return this->name;
+}
+
+std::string const& Warlock::getTitle(void)      const    {
+    return this->title;
+}
+
+void    Warlock::setTitle(std::string const& title)    {
+    this->title = title;
+}
+
+void    Warlock::learnSpell(ASpell* spell)  {
+    if (spell)  {
+        std::vector<ASpell*>::iterator   ite = kSpell.end();
+        for (; ite != kSpell.begin(); ite--)  {
+            if ((*ite)->getName() == spell->getName())
+                return ;
+        }
+        this->kSpell.push_back(spell->clone());
+    }
+}
+
+void    Warlock::forgetSpell(std::string nSpell)    {
+    std::vector<ASpell*>::iterator  ite = kSpell.end();
+    for (; ite != kSpell.begin(); ite--) {
+        if ((*ite)->getName() == nSpell)    {
+            delete *ite;
+            this->kSpell.erase(ite);
+        }
+    }
+}
+void    Warlock::launchSpell(std::string nSpell, ATarget& tgt)  {
+    std::vector<ASpell*>::iterator  ite = kSpell.end();
+    for (; ite != kSpell.begin(); ite--)   {
+        if ((*ite)->getName() == nSpell)    {
+            (*ite)->launch(tgt);
+            return;
+        }
+    }
+}
+
+void        Warlock::introduce()                const    {
+    std::cout << this->getName() << ": I am " << this->getName() << ", " << this->getTitle() << "!" << std::endl;
+}
+
+Warlock::~Warlock() {
+    std::cout << this->getName() << ": My job here is done!" << std::endl;
+
+}
+
+
+/* --------------------------------------------------------------------------------
+
+In the Warlock class, the switch statement is FORBIDDEN and its use would
+result in a -42.
+
+Below is a possible test main and its expected output:
+
+~$ ./a.out | cat -e
+Richard: This looks like another boring day.$
+Richard: I am Richard, the Titled!$
+Target Practice Dummy has been fwooshed!$
+Richard: My job here is done!$ */

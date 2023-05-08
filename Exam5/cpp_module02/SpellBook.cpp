@@ -41,6 +41,7 @@ ASpell  *SpellBook::createSpell(std::string const& gSpell)  {
     for (; it != spells.end(); it++)
         if ((*it)->getName() == gSpell)
             return *it;
+    return NULL;
 }
 
 SpellBook::~SpellBook() {}

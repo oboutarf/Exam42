@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ATarget.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oscobou <oscobou@student.42.fr>            +#+  +:+       +#+        */
+/*   By: oboutarf <oboutarf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 20:51:28 by oscobou           #+#    #+#             */
-/*   Updated: 2023/05/07 21:26:01 by oscobou          ###   ########.fr       */
+/*   Updated: 2023/05/08 15:59:57 by oboutarf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ ATarget::ATarget(const ATarget& rhs)   {
 }
 
 void    ATarget::getHitBySpell(const ASpell& shot)          const   {
-    std::cout << this->getType() << "has been " << shot.getEffects() << "!" << std::endl;
+    std::cout << this->getType() << " has been " << shot.getEffects() << "!" << std::endl;
 }
 
 std::string const&  ATarget::getType(void)                  const  {

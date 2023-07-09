@@ -6,7 +6,7 @@
 /*   By: oboutarf <oboutarf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 14:07:26 by oboutarf          #+#    #+#             */
-/*   Updated: 2023/07/09 21:14:03 by oboutarf         ###   ########.fr       */
+/*   Updated: 2023/07/10 00:19:05 by oboutarf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,21 @@ typedef struct			s_server	{
 void	fatal()
 	{ dprintf(STDERR, "Fatal error\n"); exit(EXIT_FAILURE); }
 
+void	transmit_client_message(t_client *client, char *buffer)	{
+	dprintf(2, "[mini serve]: request body: %s\n", buffer);
+	(void)client;
+}
+
+void	destroy_client(int fd, t_client *client)	{
+	for (int i = 0; i < MAX_CLIENTS; i++)	{
+		if (fd == client[i].socket_fd)	{
+			dprintf(2, "[mini serve]: [client %d] with socket %d closed connexion\n", client[i].id, fd);
+			client[i].id = -1;
+			client[i].socket_fd = -1;
+		}
+	}
+}
+
 int	main(int ac, char **av)		{
 
 	if (ac != 2) { dprintf(STDERR, "Wrong number of arguments\n"); exit(EXIT_FAILURE); }
@@ -65,15 +80,14 @@ int	main(int ac, char **av)		{
         fatal();
 	for (int i = 0; i < MAX_CLIENTS; i++)	{ client[i].id = -1; client[i].socket_fd = -1; }
 	
-	FD_ZERO(&reads);
-	FD_SET(server.socket_fd, &reads);
 	server.activity = -1;
 	server.new_client = 0;
 	server.max_socket_fd = server.socket_fd;
+	FD_ZERO(&reads);
+	FD_SET(server.socket_fd, &reads);
 	while (1)	{
 		if ((server.activity = select(server.max_socket_fd + 1, &reads, NULL, NULL, NULL)) < 0)
 			fatal();
-		dprintf(2, "LOOP");
 		for (int fd = 0; fd <= server.max_socket_fd; fd++)
 		{
 			if (FD_ISSET(fd, &reads))	{
@@ -90,42 +104,25 @@ int	main(int ac, char **av)		{
 					FD_CLR(server.socket_fd, &reads);
 				}
 				else	{
-					
+					char buffer[1024];
+					int num_bytes = recv(fd, buffer, sizeof(buffer), 0);
+					if (num_bytes < 0) 
+						fatal();
+					else if (num_bytes == 0)	{
+						destroy_client(fd, client);
+						FD_CLR(fd, &reads);
+						close(fd);
+						break ;
+					}
+					else	{
+						transmit_client_message(client, buffer);
+						bzero(buffer, sizeof(buffer));
+					}
 				}
 			}
 		}
-		// for (int fd = 0; fd < server.max_socket_fd; fd++)	{
-		// 	if (FD_ISSET(fd, &reads))	{
-		// 		dprintf(2, "%s\n", "catched");
-		// 		if (fd == server.socket_fd)	{
-		// 			struct sockaddr_in client_addr;
-		// 			socklen_t client_addr_len = sizeof(client_addr);
-		// 			int new_socket = accept(server.socket_fd, (struct sockaddr *)&client_addr, &client_addr_len);
-		// 			if (new_socket < 0)
-		// 				fatal();
-		// 			FD_SET(new_socket, &reads);
-		// 			if (new_socket > server.max_socket_fd)
-		// 				server.max_socket_fd = new_socket;
-		// 			int client_id = server.new_client;
-		// 			client[server.new_client].id = client_id;
-		// 			client[server.new_client].socket_fd = new_socket;
-		// 			server.new_client++;
-		// 		}
-		// 		else {
-		// 			int ret_recv = 1000;
-		// 			while (ret_recv == 1000 || str[strlen(str) - 1] != '\n')
-		// 			{
-		// 				ret_recv = recv(fd, str + strlen(str), 1000, 0);
-		// 				if (ret_recv <= 0)
-		// 					break ;
-		// 			}
-		// 			dprintf(2, "%s", str);
-		// 		}
-		// 	}
-		// }
 	}
-	(void)str;
-	(void)client;
+	(void)str;(void)client;
 	return EXIT_SUCCESS;
 }
 
@@ -175,3 +172,4 @@ int	main(int ac, char **av)		{
         //             }
         //         }
         //     }
+ 

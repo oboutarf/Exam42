@@ -6,7 +6,7 @@
 /*   By: oboutarf <oboutarf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 14:07:26 by oboutarf          #+#    #+#             */
-/*   Updated: 2023/07/11 00:40:14 by oboutarf         ###   ########.fr       */
+/*   Updated: 2023/07/11 22:45:14 by oboutarf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ typedef struct			s_server	{
 }						t_server;
 
 void	fatal() { dprintf(STDERR, "Fatal error\n"); exit(EXIT_FAILURE); }
-int		get_socket_id(int fd, t_client *client)	{ for (int i = 0; i < MAX_CLIENTS; i++)	{ if (client[i].socket_fd == fd) {return client[i].id;} } return -1; }
 
+int		get_socket_id(int fd, t_client *client)	{ for (int i = 0; i < MAX_CLIENTS; i++)	{ if (client[i].socket_fd == fd) {return client[i].id;} } return -1; }\
 
 void	transmit_client_message(t_client *client, char *buffer, int sender_id)	{
 	for (int i = 0; i < MAX_CLIENTS; i++)	{

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mini_serv.c                                        :+:      :+:    :+:   */
+/*   mini_serv.v.1.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oboutarf <oboutarf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 14:07:26 by oboutarf          #+#    #+#             */
-/*   Updated: 2023/07/10 20:23:57 by oboutarf         ###   ########.fr       */
+/*   Updated: 2023/07/11 00:40:14 by oboutarf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ int	main(int ac, char **av)		{
 	server.activity = -1;
 	server.new_client = 0;
 	server.max_socket_fd = server.socket_fd;
+
+
 	FD_ZERO(&sockets);
 	FD_SET(server.socket_fd, &sockets);
 	while (1)	{
@@ -98,6 +100,7 @@ int	main(int ac, char **av)		{
 			fatal();
 		for (int fd = server.socket_fd; fd <= server.max_socket_fd; fd++)
 		{
+			char buffer[1024];
 			if (FD_ISSET(fd, &reads))	{
 				if (fd == server.socket_fd)	{
 					struct sockaddr_in client_connexion;
@@ -107,13 +110,14 @@ int	main(int ac, char **av)		{
 					client[server.new_client].id = server.new_client;
 					if (client[server.new_client].socket_fd > server.max_socket_fd)
 						server.max_socket_fd = client[server.new_client].socket_fd;
-					dprintf(2, "server: client %d just arrived\n", client[server.new_client].id);
+					sprintf(buffer, "server: client %d just arrived\n", client[server.new_client].id);
+					int	new_client_id = get_socket_id(fd, client);
+					transmit_client_message(client, buffer, new_client_id);
 					FD_SET(client[server.new_client].socket_fd, &sockets);
 					server.new_client++;
 					break ;
 				}
 				else	{
-					char buffer[1024];
 					int num_bytes = recv(fd, buffer, sizeof(buffer), 0);
 					if (num_bytes <= 0)	{
 						destroy_client(fd, client);
@@ -124,11 +128,14 @@ int	main(int ac, char **av)		{
 					}
 					else	{
 						int sender_id = get_socket_id(fd, client);
-						transmit_client_message(client, buffer, sender_id);
-						bzero(buffer, sizeof(buffer));
+						char new_buffer[2048];
+						bzero(new_buffer, sizeof(new_buffer));
+						sprintf(new_buffer, "client %d: %s", sender_id, buffer);
+						transmit_client_message(client, new_buffer, sender_id);
 					}
 				}
 			}
+			bzero(buffer, sizeof(buffer));
 		}
 	}
 	(void)str;(void)client;

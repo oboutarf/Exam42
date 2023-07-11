@@ -13,7 +13,7 @@ If you cant allocate memory it should write in stderr "Fatal error" followed by 
 Your program must be non-blocking but client can be lazy and if they don't read your message you must NOT disconnect them...
 
 Your program must not contains #define preproc
-Your program must only listen to 127.0.0.1  
+Your program must only listen to 127.0.0.1
 The fd that you will receive will already be set to make 'recv' or 'send' to block if select hasn't be called before calling them, but will not block otherwise. 
 
 When a client connect to the server:

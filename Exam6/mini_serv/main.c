@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: oboutarf <oboutarf@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/12 14:23:08 by oboutarf          #+#    #+#             */
-/*   Updated: 2023/07/12 14:23:14 by oboutarf         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
@@ -67,7 +55,7 @@ char *str_join(char *buf, char *add)
 
 int main() {
 	int sockfd, connfd, len;
-	struct sockaddr_in servaddr, cli; 
+	struct sockaddr_in servaddr, cli;
 
 	// socket create and verification 
 	sockfd = socket(AF_INET, SOCK_STREAM, 0); 
